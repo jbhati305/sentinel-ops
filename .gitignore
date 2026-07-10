@@ -1,0 +1,62 @@
+# SentinelOps local runtime data
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+secrets/
+
+# Claude / agent tooling
+.claude/
+.codex/
+.agents/
+
+# Excluded from the submitted repo on purpose (private notes)
+*guide.md
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Python packaging and virtual environments
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+
+# Playwright browser tool artifacts
+.playwright-mcp/
+
+# Logs
+*.log
+logs/
+
+# Local IDE/editor/system files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local Docker/runtime artifacts
+tmp/
+temp/
+
+# Assignment recording exports should be linked externally, not committed
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi

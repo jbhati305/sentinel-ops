@@ -1,0 +1,52 @@
+.git/
+.github/
+.agents/
+.codex/
+
+# Local runtime data
+sentinel_ops.sqlite3*
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+*.db
+*.db-shm
+*.db-wal
+
+# Local environments and Python artifacts
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Frontend dependency/build outputs
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.next/
+
+# Tests/docs/local-only artifacts not needed in the runtime image
+backend/tests/
+docs/
+improvement.md
+.env
+.env.*
+!.env.example
+*.log
+*.mp4
+*.mov
+*.mkv
+*.webm

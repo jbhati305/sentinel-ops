@@ -1,0 +1,15 @@
+services:
+  sentinel-ops:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      SENTINELOPS_DB_PATH: /data/sentinel_ops.sqlite3
+      SENTINELOPS_SIM_AUTOSTART: "1"
+    ports:
+      - "8000:8000"
+    volumes:
+      - sentinel_ops_data:/data
+
+volumes:
+  sentinel_ops_data:
