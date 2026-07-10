@@ -2,6 +2,7 @@
 .github/
 .agents/
 .codex/
+.claude/
 
 # Local runtime data
 sentinel_ops.sqlite3*
@@ -22,6 +23,7 @@ env/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.playwright-mcp/
 .ruff_cache/
 .mypy_cache/
 .coverage
@@ -29,19 +31,13 @@ htmlcov/
 *.egg-info/
 build/
 dist/
-
-# Frontend dependency/build outputs
+uv.lock
+.uv-cache/
 node_modules/
-frontend/node_modules/
-frontend/dist/
-frontend/build/
-frontend/.vite/
-frontend/.next/
 
 # Tests/docs/local-only artifacts not needed in the runtime image
 backend/tests/
 docs/
-improvement.md
 .env
 .env.*
 !.env.example

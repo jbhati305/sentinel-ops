@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, Response
-from fastapi.staticfiles import StaticFiles
 
 from backend.app.api import router as api_router
 from backend.app.config import Settings
@@ -31,6 +28,7 @@ def create_app(
             await container.simulator.start()
         yield
         await container.simulator.stop()
+        container.close()
 
     app = FastAPI(
         title="SentinelOps",
@@ -48,20 +46,6 @@ def create_app(
         allow_headers=["*"],
     )
 
-    frontend_dir = _frontend_dir()
-    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
     app.include_router(api_router)
 
-    @app.get("/", include_in_schema=False)
-    def dashboard() -> FileResponse:
-        return FileResponse(frontend_dir / "pages" / "index.html")
-
-    @app.get("/favicon.ico", include_in_schema=False)
-    def favicon() -> Response:
-        return Response(status_code=204)
-
     return app
-
-
-def _frontend_dir() -> Path:
-    return Path(__file__).resolve().parents[2] / "frontend" / "src"

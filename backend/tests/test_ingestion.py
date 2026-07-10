@@ -2,7 +2,20 @@ from __future__ import annotations
 
 from datetime import timedelta
 
+from backend.app.ingestion.service import TelemetryService
 from backend.tests.conftest import reading
+
+
+class RecordingPublisher:
+    def __init__(self):
+        self.readings = []
+        self.closed = False
+
+    def publish_batch(self, readings):
+        self.readings.extend(readings)
+
+    def close(self):
+        self.closed = True
 
 
 def test_valid_reading_is_accepted(services, base_time):
@@ -100,3 +113,52 @@ def test_out_of_order_event_is_stored_as_late_arrival(services, base_time):
     assert summary["accepted"] == 2
     assert summary["late_arrivals"] == 1
     assert db.scalar("SELECT COUNT(*) FROM telemetry_readings WHERE late_arrival = 1") == 1
+
+
+def test_accepted_readings_are_published_to_live_output(services, base_time):
+    db, analysis, _ = services
+    publisher = RecordingPublisher()
+    telemetry = TelemetryService(db, analysis, publisher=publisher)
+    event_id = "live-publisher-test"
+
+    summary = telemetry.ingest_batch(
+        [
+            reading(
+                event_id=event_id,
+                metric="vibration",
+                value=3.8,
+                timestamp=base_time,
+            )
+        ]
+    )
+
+    assert summary["accepted"] == 1
+    assert len(publisher.readings) == 1
+    assert publisher.readings[0].event_id == event_id
+    assert publisher.readings[0].quality == "GOOD"
+
+
+def test_rejected_and_duplicate_readings_are_not_published(services, base_time):
+    db, analysis, _ = services
+    publisher = RecordingPublisher()
+    telemetry = TelemetryService(db, analysis, publisher=publisher)
+    payload = reading(
+        event_id="publish-once-test",
+        metric="vibration",
+        value=3.8,
+        timestamp=base_time,
+    )
+    bad_unit = reading(
+        metric="coolant_pressure",
+        value=2.8,
+        unit="psi",
+        timestamp=base_time,
+    )
+
+    first = telemetry.ingest_batch([payload, bad_unit])
+    second = telemetry.ingest_batch([payload])
+
+    assert first["accepted"] == 1
+    assert first["rejected"] == 1
+    assert second["duplicates"] == 1
+    assert [event.event_id for event in publisher.readings] == ["publish-once-test"]

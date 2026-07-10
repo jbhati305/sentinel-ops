@@ -1,6 +1,12 @@
-.PHONY: run test clean
+.PHONY: up down backend test clean
 
-run:
+up:
+	docker compose up --build
+
+down:
+	docker compose down
+
+backend:
 	python3 -m uvicorn backend.app.main:create_app --factory --reload --host 0.0.0.0 --port 8000
 
 test:

@@ -3,6 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 from backend.app.analysis.engine import AnalysisEngine
+from backend.app.ingestion.publisher import (
+    NoopTelemetryPublisher,
+    PublishedTelemetryReading,
+    TelemetryPublisher,
+)
 from backend.app.ingestion.validator import TelemetryValidator
 from backend.app.repositories.interfaces import QueryExecutor
 from backend.app.schemas import TelemetryReadingIn
@@ -17,10 +22,12 @@ class TelemetryService:
         db: QueryExecutor,
         analysis: AnalysisEngine,
         validator: TelemetryValidator | None = None,
+        publisher: TelemetryPublisher | None = None,
     ):
         self.db = db
         self.analysis = analysis
         self.validator = validator or TelemetryValidator(db)
+        self.publisher = publisher or NoopTelemetryPublisher()
 
     def ingest_batch(self, readings: list[TelemetryReadingIn]) -> dict[str, Any]:
         summary: dict[str, Any] = {
@@ -31,6 +38,7 @@ class TelemetryService:
             "suspect": 0,
             "errors": [],
         }
+        accepted_readings: list[PublishedTelemetryReading] = []
         devices = {row["id"] for row in self.db.fetch_all("SELECT id FROM devices")}
         metrics = {
             row["metric"]: dict(row)
@@ -77,6 +85,19 @@ class TelemetryService:
                 quality_reason=quality_reason,
                 late_arrival=late_arrival,
             )
+            accepted_readings.append(
+                PublishedTelemetryReading(
+                    event_id=reading.event_id,
+                    device_id=reading.device_id,
+                    metric=reading.metric,
+                    value=reading.value,
+                    unit=reading.unit,
+                    event_timestamp=event_timestamp,
+                    quality=quality,
+                    quality_reason=quality_reason,
+                    late_arrival=late_arrival,
+                )
+            )
 
             summary["accepted"] += 1
             if late_arrival:
@@ -86,8 +107,12 @@ class TelemetryService:
 
         if summary["accepted"]:
             self.analysis.analyze_all()
+            self.publisher.publish_batch(accepted_readings)
 
         return summary
+
+    def close(self) -> None:
+        self.publisher.close()
 
     def _is_duplicate(self, event_id: str) -> bool:
         return self.db.fetch_one(

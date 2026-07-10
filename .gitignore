@@ -9,13 +9,11 @@
 !.env.example
 secrets/
 
-# Claude / agent tooling
+# Local assistant/editor tooling
 .claude/
 .codex/
 .agents/
-
-# Excluded from the submitted repo on purpose (private notes)
-*guide.md
+docs/interview-guide.md
 
 # Python bytecode and caches
 __pycache__/
@@ -32,6 +30,8 @@ venv/
 build/
 dist/
 *.egg-info/
+uv.lock
+.uv-cache/
 
 # Playwright browser tool artifacts
 .playwright-mcp/

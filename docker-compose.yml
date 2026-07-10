@@ -1,15 +1,50 @@
 services:
-  sentinel-ops:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sentinelops
+      POSTGRES_PASSWORD: sentinelops
+      POSTGRES_DB: sentinelops
+    volumes:
+      - sentinel_ops_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentinelops -d sentinelops"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     environment:
-      SENTINELOPS_DB_PATH: /data/sentinel_ops.sqlite3
+      SENTINELOPS_DATABASE_URL: postgresql://sentinelops:sentinelops@postgres:5432/sentinelops
       SENTINELOPS_SIM_AUTOSTART: "1"
+      SENTINELOPS_GRAFANA_LIVE_URL: http://grafana:3000/api/live/push/sentinelops
+      SENTINELOPS_GRAFANA_LIVE_USERNAME: admin
+      SENTINELOPS_GRAFANA_LIVE_PASSWORD: admin
     ports:
       - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
     volumes:
-      - sentinel_ops_data:/data
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - sentinel_ops_grafana_data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
 
 volumes:
-  sentinel_ops_data:
+  sentinel_ops_pg_data:
+  sentinel_ops_grafana_data:

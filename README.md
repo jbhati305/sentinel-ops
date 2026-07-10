@@ -6,13 +6,24 @@ units.
 SentinelOps ingests simulated equipment telemetry, stores event-time readings,
 scores device health, and turns noisy sensor values into operator-facing incidents.
 The focus is the backend: ingestion, validation, data-quality handling, analysis,
-alert lifecycle, and explainable recommendations. A lightweight dashboard lives in
-`frontend/src` and is served by the API so the behavior can be demonstrated without
-a separate frontend build.
+alert lifecycle, and explainable recommendations. The operator dashboard is
+**Grafana**, provisioned automatically with a Postgres datasource, Grafana Live
+metric streams, and a fleet monitoring dashboard. The backend writes durable
+operational data to Postgres and also publishes accepted telemetry to Grafana
+Live's push API, so the five metric charts update through Grafana Live WebSockets
+in the browser. A tiny plain-HTML `/control` page (served by the backend, no
+build step) drives the simulator. Backend, Postgres, and Grafana are independent
+services wired together with Docker Compose.
 
-For a detailed walkthrough of the architecture, design decisions, trade-offs, demo
-script, and likely interview questions, see
-[`docs/interview-guide.md`](docs/interview-guide.md).
+For runnable demo, testing, and troubleshooting commands, see
+[`testing.md`](testing.md).
+
+## Screenshots
+
+| Fleet Monitoring | Device Detail |
+| --- | --- |
+| [![Fleet monitoring dashboard](docs/screenshots/fleet-monitoring-dashboard.png)](docs/screenshots/fleet-monitoring-dashboard.png) | [![Device detail dashboard](docs/screenshots/device-detail-dashboard.png)](docs/screenshots/device-detail-dashboard.png) |
+| Fleet-wide health, open alerts, and per-metric live charts driven by Grafana Live. | Per-device health score, evidence, and recent data-quality flags. |
 
 ## Problem Interpretation
 
@@ -67,7 +78,7 @@ FastAPI ingestion API
       +-- out-of-order and data-quality flags
       |
       v
-SQLite time-series tables
+SQLite (local/tests) or Postgres (Docker/demo) time-series tables
       |
       v
 Analysis engine
@@ -80,12 +91,36 @@ Analysis engine
       +-- health scoring and alert lifecycle
       |
       v
-REST API + operator dashboard
+REST API  +  Grafana (Postgres snapshots + Live metric streams)  +  /control
 ```
 
-SQLite is used so reviewers can run the project immediately. The schema keeps the
-same shape I would use with PostgreSQL/TimescaleDB: devices, metric definitions,
-telemetry readings, device health, and alerts.
+SQLite remains the default for local development and the test suite — no setup
+required. When `SENTINELOPS_DATABASE_URL` is set (as it is in `docker-compose.yml`),
+the backend writes to Postgres instead, using the identical schema. Grafana uses
+Postgres for fleet state, health, alerts, and historical tables. For the five
+high-frequency metric charts, the backend also publishes each accepted reading to
+Grafana Live channels named `stream/sentinelops/<device_id>.<metric>`, which the
+dashboard receives over WebSockets. Both database adapters implement the same
+narrow `QueryExecutor` protocol, so repositories and services never know which
+database is active.
+
+### Flow Diagrams
+
+Editable sources are in [`docs/Flowcharts`](docs/Flowcharts) (`.excalidraw`,
+open at [excalidraw.com](https://excalidraw.com)).
+
+[![Architecture & data flow](docs/Flowcharts/01-architecture-flow.png)](docs/Flowcharts/01-architecture-flow.png)
+*End-to-end path: simulator to ingestion API, Postgres/SQLite storage, the
+analysis pipeline, and Grafana — including the Grafana Live push that bypasses
+Postgres for the realtime charts.*
+
+[![Persistence filtering and hysteresis](docs/Flowcharts/02-detection-hysteresis.png)](docs/Flowcharts/02-detection-hysteresis.png)
+*Why a single bad reading never becomes an alert: opening requires 4 of the
+last 5 samples abnormal; resolving requires 5 consecutive healthy samples.*
+
+[![Alert lifecycle and sensor-fault diagnosis](docs/Flowcharts/03-lifecycle-and-diagnosis.png)](docs/Flowcharts/03-lifecycle-and-diagnosis.png)
+*How the same anomalous reading is triaged as a sensor fault versus a real
+equipment fault, and how alerts move through OPEN -> ACKNOWLEDGED -> RESOLVED.*
 
 ## Repository Structure
 
@@ -94,7 +129,7 @@ sentinel-ops/
 ├── backend/
 │   ├── app/
 │   │   ├── api/
-│   │   │   └── routes/
+│   │   │   └── routes/       # includes control.py (GET /control)
 │   │   ├── analysis/
 │   │   │   ├── anomaly_detector.py
 │   │   │   ├── trend_detector.py
@@ -103,7 +138,7 @@ sentinel-ops/
 │   │   │   └── engine.py
 │   │   ├── ingestion/
 │   │   ├── models/
-│   │   ├── repositories/
+│   │   ├── repositories/      # sqlite.py, postgres.py (same QueryExecutor protocol)
 │   │   ├── schemas/
 │   │   ├── services/
 │   │   ├── simulation/
@@ -113,16 +148,19 @@ sentinel-ops/
 │   ├── tests/
 │   ├── migrations/
 │   └── Dockerfile
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── api/
-│   │   └── types/
+├── grafana/
+│   ├── provisioning/
+│   │   ├── datasources/postgres.yml
+│   │   └── dashboards/sentinelops.yml
+│   └── dashboards/
+│       ├── sentinelops.json
+│       ├── sentinelops-device-detail.json
+│       └── sentinelops-alert-detail.json
 ├── docs/
 │   ├── architecture.md
 │   ├── detection-strategy.md
-│   └── screenshots/
+│   ├── Flowcharts/            # .excalidraw sources + rendered .png
+│   └── screenshots/           # Grafana dashboard screenshots
 ├── docker-compose.yml
 ├── Makefile
 ├── pyproject.toml
@@ -141,8 +179,10 @@ The code is organized around small responsibilities:
 - `AnomalyDetector`, `TrendDetector`, `AlertEngine`, and `HealthScorer` each own a
   separate analysis concern.
 - `AnalysisEngine` composes those components rather than embedding every rule.
-- `FleetRepository` and `SqliteDatabase` isolate persistence and dashboard read
-  models from route handlers.
+- `FleetRepository` isolates dashboard read models from route handlers;
+  `SqliteDatabase` and `PostgresDatabase` isolate persistence behind the same
+  `QueryExecutor` protocol, so swapping the database never touches repositories,
+  services, or routes.
 - `container.py` is the composition root where concrete dependencies are assembled.
 
 This keeps the core domain logic testable without FastAPI and makes future
@@ -151,32 +191,43 @@ or scoring.
 
 ## Running Locally
 
-Requirements:
+The recommended way to demo the project is Docker Compose, which starts the
+backend, Postgres, and Grafana together:
 
-- Python 3.11 or newer
-- FastAPI, Uvicorn, Pydantic, pytest
+```bash
+docker compose up --build
+```
 
-Install dependencies:
+Open:
+
+| Service | URL | Purpose |
+| --- | --- | --- |
+| Grafana | `http://localhost:3001` | Operator dashboard (auto-provisioned datasource + "SentinelOps Fleet Monitoring" dashboard). Default login `admin` / `admin`, or browse anonymously. |
+| Backend API | `http://localhost:8000` | REST API, unchanged contract |
+| Control page | `http://localhost:8000/control` | Start/stop/reset the simulator, change speed, inject scenarios |
+| API docs | `http://localhost:8000/docs` | OpenAPI/Swagger UI |
+
+In this mode the backend writes to Postgres (`SENTINELOPS_DATABASE_URL`, set in
+`docker-compose.yml`) and publishes accepted readings to
+`http://grafana:3000/api/live/push/sentinelops`. Grafana still queries Postgres
+directly for summary cards and tables, while the metric charts subscribe to
+Grafana Live for a realtime feel.
+
+### Running the backend without Docker (SQLite mode)
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -e ".[dev]"
-```
-
-Run the service:
-
-```bash
 python3 -m uvicorn backend.app.main:create_app --factory --reload --host 0.0.0.0 --port 8000
 ```
 
-Open:
+With no `SENTINELOPS_DATABASE_URL` set, the backend falls back to SQLite at
+`SENTINELOPS_DB_PATH` (default `./sentinel_ops.sqlite3`) — the same mode the test
+suite uses. Open `http://localhost:8000/control` for simulator controls; there is
+no Grafana in this mode unless you point it at the SQLite file yourself.
 
-```text
-http://localhost:8000
-```
-
-The simulator starts automatically. The dashboard includes controls to inject:
+The simulator starts automatically. The control page and API let you inject:
 
 - transient vibration spike
 - gradual bearing degradation
@@ -348,8 +399,9 @@ OPEN -> ACKNOWLEDGED -> RESOLVED
 ```
 
 Repeated abnormal readings update the same active alert rather than creating an
-append-only stream of duplicate alerts. Operators can acknowledge or resolve alerts
-with notes through the API or dashboard.
+append-only stream of duplicate alerts. Operators acknowledge or resolve alerts
+with an optional note through `POST /api/v1/alerts/{alert_id}/acknowledge` and
+`.../resolve`; Grafana surfaces the active alert and its evidence for triage.
 
 ## Tests
 

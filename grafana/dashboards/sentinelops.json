@@ -1,0 +1,1449 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#73BF69"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 3,
+        "h": 5
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM devices;",
+          "refId": "A"
+        }
+      ],
+      "title": "Fleet",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#73BF69"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 3,
+        "y": 0,
+        "w": 3,
+        "h": 5
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM device_health WHERE state = 'HEALTHY';",
+          "refId": "A"
+        }
+      ],
+      "title": "Healthy",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF9830"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 3,
+        "h": 5
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM device_health WHERE state = 'WARNING';",
+          "refId": "A"
+        }
+      ],
+      "title": "Warning",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#F2495C"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "links": [
+            {
+              "title": "Open alert detail",
+              "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=ALL",
+              "targetBlank": false
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 9,
+        "y": 0,
+        "w": 3,
+        "h": 5
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.0",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM alerts WHERE status IN ('OPEN','ACKNOWLEDGED');",
+          "refId": "A"
+        }
+      ],
+      "title": "Open Alerts",
+      "type": "stat"
+    },
+    {
+      "id": 6,
+      "title": "Fleet Health",
+      "type": "bargauge",
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 5
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT\n  MAX(CASE WHEN d.id = 'cooling-unit-01' THEN COALESCE(h.health_score, 0) END) AS \"CU-01\",\n  MAX(CASE WHEN d.id = 'cooling-unit-02' THEN COALESCE(h.health_score, 0) END) AS \"CU-02\",\n  MAX(CASE WHEN d.id = 'cooling-unit-03' THEN COALESCE(h.health_score, 0) END) AS \"CU-03\",\n  MAX(CASE WHEN d.id = 'cooling-unit-04' THEN COALESCE(h.health_score, 0) END) AS \"CU-04\",\n  MAX(CASE WHEN d.id = 'cooling-unit-05' THEN COALESCE(h.health_score, 0) END) AS \"CU-05\",\n  MAX(CASE WHEN d.id = 'cooling-unit-06' THEN COALESCE(h.health_score, 0) END) AS \"CU-06\"\nFROM devices d\nLEFT JOIN device_health h ON h.device_id = d.id;",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F2495C",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 40
+              },
+              {
+                "color": "#F2CC0C",
+                "value": 65
+              },
+              {
+                "color": "#73BF69",
+                "value": 85
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-01"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-01 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-01",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-02"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-02 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-02",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-03"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-03 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-03",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-04"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-04 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-04",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-05"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-05 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-05",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-06"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-06 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-06",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "left",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      }
+    },
+    {
+      "datasource": {
+        "type": "grafana",
+        "uid": "grafana"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "displayName": "Inlet Temp",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#73BF69"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 2500,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 6,
+        "h": 5
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "channel": "stream/sentinelops/${device}.inlet_temperature",
+          "datasource": {
+            "type": "grafana",
+            "uid": "grafana"
+          },
+          "queryType": "measurements",
+          "refId": "A"
+        }
+      ],
+      "title": "Inlet Temp",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana",
+        "uid": "grafana"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "displayName": "Power Draw",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5794F2"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 2500,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 5,
+        "w": 6,
+        "h": 5
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "channel": "stream/sentinelops/${device}.power_draw",
+          "datasource": {
+            "type": "grafana",
+            "uid": "grafana"
+          },
+          "queryType": "measurements",
+          "refId": "A"
+        }
+      ],
+      "title": "Power Draw",
+      "type": "timeseries"
+    },
+    {
+      "id": 5,
+      "title": "Alert Severity",
+      "type": "piechart",
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 5,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT\n  SUM(CASE WHEN severity = 'CRITICAL' THEN 1 ELSE 0 END) AS \"CRITICAL\",\n  SUM(CASE WHEN severity = 'WARNING' THEN 1 ELSE 0 END) AS \"WARNING\",\n  SUM(CASE WHEN severity = 'INFO' THEN 1 ELSE 0 END) AS \"INFO\"\nFROM alerts\nWHERE status IN ('OPEN', 'ACKNOWLEDGED');",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "unit": "short",
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CRITICAL"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#F2495C"
+                }
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open critical alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=CRITICAL&var-device=ALL",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WARNING"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF9830"
+                }
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open warning alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=WARNING&var-device=ALL",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "INFO"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5794F2"
+                }
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open info alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=INFO&var-device=ALL",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "displayLabels": [
+          "name",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "title": "Alerts by Device",
+      "type": "bargauge",
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 5,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT\n  SUM(CASE WHEN device_id = 'cooling-unit-01' THEN 1 ELSE 0 END) AS \"CU-01\",\n  SUM(CASE WHEN device_id = 'cooling-unit-02' THEN 1 ELSE 0 END) AS \"CU-02\",\n  SUM(CASE WHEN device_id = 'cooling-unit-03' THEN 1 ELSE 0 END) AS \"CU-03\",\n  SUM(CASE WHEN device_id = 'cooling-unit-04' THEN 1 ELSE 0 END) AS \"CU-04\",\n  SUM(CASE WHEN device_id = 'cooling-unit-05' THEN 1 ELSE 0 END) AS \"CU-05\",\n  SUM(CASE WHEN device_id = 'cooling-unit-06' THEN 1 ELSE 0 END) AS \"CU-06\"\nFROM alerts\nWHERE status IN ('OPEN', 'ACKNOWLEDGED');",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#73BF69",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              },
+              {
+                "color": "#F2495C",
+                "value": 3
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-01"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-01 alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=cooling-unit-01",
+                    "targetBlank": false
+                  },
+                  {
+                    "title": "Open CU-01 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-01",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-02"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-02 alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=cooling-unit-02",
+                    "targetBlank": false
+                  },
+                  {
+                    "title": "Open CU-02 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-02",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-03"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-03 alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=cooling-unit-03",
+                    "targetBlank": false
+                  },
+                  {
+                    "title": "Open CU-03 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-03",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-04"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-04 alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=cooling-unit-04",
+                    "targetBlank": false
+                  },
+                  {
+                    "title": "Open CU-04 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-04",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-05"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-05 alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=cooling-unit-05",
+                    "targetBlank": false
+                  },
+                  {
+                    "title": "Open CU-05 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-05",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CU-06"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open CU-06 alerts",
+                    "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=ALL&var-device=cooling-unit-06",
+                    "targetBlank": false
+                  },
+                  {
+                    "title": "Open CU-06 device detail",
+                    "url": "/d/sentinelops-device-detail/sentinelops-device-detail?var-device=cooling-unit-06",
+                    "targetBlank": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 14,
+        "minVizWidth": 8,
+        "namePlacement": "left",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      }
+    },
+    {
+      "datasource": {
+        "type": "grafana",
+        "uid": "grafana"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "displayName": "Outlet Temp",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF9830"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 2500,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 6,
+        "h": 5
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "channel": "stream/sentinelops/${device}.outlet_temperature",
+          "datasource": {
+            "type": "grafana",
+            "uid": "grafana"
+          },
+          "queryType": "measurements",
+          "refId": "A"
+        }
+      ],
+      "title": "Outlet Temp",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana",
+        "uid": "grafana"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "displayName": "Coolant Pressure",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#B877D9"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 2500,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 10,
+        "w": 6,
+        "h": 5
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "channel": "stream/sentinelops/${device}.coolant_pressure",
+          "datasource": {
+            "type": "grafana",
+            "uid": "grafana"
+          },
+          "queryType": "measurements",
+          "refId": "A"
+        }
+      ],
+      "title": "Coolant Pressure",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana",
+        "uid": "grafana"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "displayName": "Vibrations",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#F2CC0C"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 2500,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 12,
+        "h": 6
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "channel": "stream/sentinelops/${device}.vibration",
+          "datasource": {
+            "type": "grafana",
+            "uid": "grafana"
+          },
+          "queryType": "measurements",
+          "refId": "A"
+        }
+      ],
+      "title": "Vibrations",
+      "type": "timeseries"
+    },
+    {
+      "id": 8,
+      "title": "Alert Activity",
+      "type": "timeseries",
+      "datasource": {
+        "type": "postgres",
+        "uid": "sentinelops-postgres"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 13,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT\n  date_trunc('minute', first_detected_at::timestamptz) AS time,\n  severity AS metric,\n  COUNT(*) AS value\nFROM alerts\nWHERE first_detected_at::timestamptz >= now() - interval '30 minutes'\nGROUP BY time, severity\nORDER BY time ASC;",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "links": [
+            {
+              "title": "Open alert detail",
+              "url": "/d/sentinelops-alert-detail/sentinelops-alert-detail?var-severity=${__field.name}&var-device=ALL",
+              "targetBlank": false
+            }
+          ]
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CRITICAL"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#F2495C"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WARNING"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF9830"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "INFO"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5794F2"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Cooling Unit 01",
+          "value": "cooling-unit-01"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "sentinelops-postgres"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Device",
+        "multi": false,
+        "name": "device",
+        "options": [],
+        "query": "SELECT id AS __value, name AS __text FROM devices ORDER BY name;",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "SentinelOps Fleet Monitoring",
+  "uid": "sentinelops-fleet-monitoring",
+  "version": 18,
+  "weekStart": ""
+}

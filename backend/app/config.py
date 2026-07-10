@@ -18,6 +18,14 @@ class Settings:
         "SENTINELOPS_DB_PATH",
         str(Path.cwd() / "sentinel_ops.sqlite3"),
     )
+    database_url: str | None = os.getenv("SENTINELOPS_DATABASE_URL")
     simulation_autostart: bool = _bool_from_env("SENTINELOPS_SIM_AUTOSTART", True)
     simulator_tick_seconds: float = float(os.getenv("SENTINELOPS_TICK_SECONDS", "1.0"))
+    grafana_live_url: str | None = os.getenv("SENTINELOPS_GRAFANA_LIVE_URL")
+    grafana_live_username: str | None = os.getenv("SENTINELOPS_GRAFANA_LIVE_USERNAME")
+    grafana_live_password: str | None = os.getenv("SENTINELOPS_GRAFANA_LIVE_PASSWORD")
+    grafana_live_token: str | None = os.getenv("SENTINELOPS_GRAFANA_LIVE_TOKEN")
+    grafana_live_queue_size: int = int(
+        os.getenv("SENTINELOPS_GRAFANA_LIVE_QUEUE_SIZE", "5000")
+    )
     cors_allow_origins: tuple[str, ...] = ("*",)
